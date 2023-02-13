@@ -11,6 +11,17 @@ const canvas = document.getElementById("canvas");
 if (canvas.getContext) {
     const ctx = canvas.getContext("2d");
 
+    class Vector {
+        constructor(x,y){
+            this.x = x;
+            this.y = y;
+        }
+
+        add(vector){
+            return new Vector(this.x + vector.x, this.y + vector.y);
+        }
+    }
+
 } else {
     console.log("canvas-unsupported");
 }
