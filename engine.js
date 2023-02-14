@@ -50,6 +50,14 @@ if (canvas.getContext) {
         }
     }
 
+    //____Main-Loop____\\
+    function mainLoop() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        requestAnimationFrame(mainLoop);
+    }
+    requestAnimationFrame(mainLoop);
+
 } else {
     console.log("canvas-unsupported");
 }
