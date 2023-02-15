@@ -88,6 +88,13 @@ if (canvas.getContext) {
         }
     }
 
+    let vector_mouse = new Vector(0,0);
+    document.addEventListener("mousemove", function(event){
+        let mouseX = event.clientX;
+        let mouseY = event.clientY;
+        return vector_mouse = new Vector(mouseX, mouseY);
+    });
+
     //____Main-Loop____\\
     function mainLoop() {
         ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
