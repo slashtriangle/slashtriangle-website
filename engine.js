@@ -28,6 +28,44 @@ if (canvas.getContext) {
         sub(vector){
             return new Vector(this.x - vector.x, this.y - vector.y);
         }
+        
+        //  Scalar-Multiplication
+        scale(scalar){
+            return new Vector(this.x * scalar, this.y * scalar);
+        }
+
+        mag(){
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        }
+        
+        //  Normalize // Optional Scalar-Multiplication
+        normalize(scalar = 1){
+            return new Vector(this.x / this.mag()  * scalar, this.y / this.mag() * scalar);
+        }
+
+        draw_vector_from(vector_start, color="black"){
+            ctx.beginPath();
+            ctx.moveTo(vector_start.x, vector_start.y);
+            ctx.lineTo(vector_start.x + this.x, vector_start.y + this.y);
+            ctx.strokeStyle = color;
+            ctx.stroke();
+        }
+
+        draw_vector_to(vector_end, color="black"){
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + vector_end.x, this.y + vector_end.y);
+            ctx.strokeStyle = color;
+            ctx.stroke();
+        }
+    }
+
+    function draw_vector_from_to(vector_start, vector_end, color="black"){
+        ctx.beginPath();
+        ctx.moveTo(vector_start.x, vector_start.y);
+        ctx.lineTo(vector_end.x, vector_end.y);
+        ctx.strokeStyle = color;
+        ctx.stroke();
     }
 
     class Ball {
