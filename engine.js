@@ -95,9 +95,25 @@ if (canvas.getContext) {
         return vector_mouse = new Vector(mouseX, mouseY);
     });
 
+    function random(min, max){
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    function create_ball_array(n, corner=200){
+        for(let i=0 ; i < n ; i++){
+            new Ball(random(corner , canvas_width - corner), corner, random(20, 80));
+            //corner distance from top left and right border
+        }
+    }
+    create_ball_array(10);
+
     //____Main-Loop____\\
     function mainLoop() {
-        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        ctx.clearRect(0, 0, canvas_width, canvas_height);
+
+        for (let ball of ballArray){
+            ball.draw();
+        }
 
         requestAnimationFrame(mainLoop);
     }
