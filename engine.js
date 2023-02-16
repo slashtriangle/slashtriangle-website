@@ -74,7 +74,7 @@ if (canvas.getContext) {
             this.position     = new Vector(x, y);
             this.velocity     = new Vector(0, 1);
             this.acceleration = new Vector(0, 0);
-      
+            this.color = "#669999";
             ballArray.push(this);
         }
 
@@ -83,7 +83,7 @@ if (canvas.getContext) {
             ctx.arc(this.position.x, this.position.y, this.r, 0, 2 * Math.PI);
             ctx.strokeStyle = "black";
             ctx.stroke();
-            ctx.fillStyle = "#669999";
+            ctx.fillStyle = this.color;
             ctx.fill();
         }
     }
@@ -102,10 +102,26 @@ if (canvas.getContext) {
     function create_ball_array(n, corner=200){
         for(let i=0 ; i < n ; i++){
             new Ball(random(corner , canvas_width - corner), corner, random(20, 80));
-            //corner distance from top left and right border
+            //corner = distance from top left and right border
         }
     }
     create_ball_array(10);
+
+    let index = 0;
+    let previous_index = ballArray.length -1;
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'b') {
+
+            if (index === ballArray.length) {
+                index = 0;
+                previous_index = ballArray.length - 1;
+            }
+            ballArray[index].color = "#5f4761";
+            ballArray[previous_index].color = "#669999";
+            previous_index = index;
+            index ++;
+        }
+    });
 
     //____Main-Loop____\\
     function mainLoop() {
