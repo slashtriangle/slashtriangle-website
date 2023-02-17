@@ -72,9 +72,10 @@ if (canvas.getContext) {
         constructor(x,y,r){
             this.r = r;
             this.position     = new Vector(x, y);
-            this.velocity     = new Vector(0, 1);
+            this.velocity     = new Vector(0, 0);
             this.acceleration = new Vector(0, 0);
             this.color = "#669999";
+            this.selected = false;
             ballArray.push(this);
         }
 
@@ -85,6 +86,10 @@ if (canvas.getContext) {
             ctx.stroke();
             ctx.fillStyle = this.color;
             ctx.fill();
+        }
+
+        move(){
+            this.position = this.position.add(this.velocity);
         }
     }
 
@@ -107,28 +112,108 @@ if (canvas.getContext) {
     }
     create_ball_array(10);
 
-    let index = 0;
+    let index = 0; //for case "b"
     let previous_index = ballArray.length -1;
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'b') {
+    let UP = false; DOWN = false; LEFT = false; RIGHT = false;
 
-            if (index === ballArray.length) {
-                index = 0;
-                previous_index = ballArray.length - 1;
-            }
-            ballArray[index].color = "#5f4761";
-            ballArray[previous_index].color = "#669999";
-            previous_index = index;
-            index ++;
+    window.addEventListener("keydown", (event) => {
+        if (event.defaultPrevented) {
+            return;
         }
-    });
+        switch (event.key) {
+            case "ArrowUp":
+                UP = true;
+            break;
+            case "ArrowDown":
+                DOWN = true;
+            break;
+            case "ArrowLeft":
+                LEFT = true;
+            break;
+            case "ArrowRight":
+                RIGHT = true;
+            break;
+
+            case "b":
+                console.log(event.key);
+
+                if (index === ballArray.length) {
+                    index = 0;
+                    previous_index = ballArray.length - 1;
+                }
+                ballArray[index].color = "#5f4761";
+                ballArray[index].selected = true;
+                ballArray[previous_index].color = "#669999";
+                ballArray[previous_index].selected = false;
+                previous_index = index;
+                index ++;
+            break;
+            default: return;
+        }
+        event.preventDefault();
+    }, true);
+   
+    window.addEventListener("keyup", (event) => {
+        if (event.defaultPrevented) {
+            return;
+        }
+        switch (event.key) {
+            case "ArrowUp":
+                UP = false;
+            break;
+            case "ArrowDown":
+                DOWN = false;
+            break;
+            case "ArrowLeft":
+                LEFT = false;
+            break;
+            case "ArrowRight":
+                RIGHT = false;
+            break;
+            default: return;
+        }
+        event.preventDefault();
+    }, true);
+
+    //radar for visualizing vectors
+    let radar_position = new Vector(canvas_width - 100, canvas_height- 100);
+    let magnitude_radar = 50;
+    function draw_radar(){  
+        ctx.beginPath();
+        ctx.arc(radar_position.x, radar_position.y, magnitude_radar, 0, 2 * Math.PI);
+        ctx.strokeStyle = "purple";
+        ctx.stroke();
+    }
 
     //____Main-Loop____\\
     function mainLoop() {
         ctx.clearRect(0, 0, canvas_width, canvas_height);
+        for (let A of ballArray){
+             
+            if (A.selected){
 
-        for (let ball of ballArray){
-            ball.draw();
+                if(UP){
+                    A.velocity.y = -1;
+                }
+                if(DOWN){
+                    A.velocity.y =  1;
+                }
+                if(LEFT){
+                    A.velocity.x = -1;
+                }
+                if(RIGHT){
+                    A.velocity.x =  1;
+                }
+                if(!UP && !DOWN){
+                    A.velocity.y =  0;
+                }
+                if(!LEFT && !RIGHT){
+                    A.velocity.x = 0;
+                }
+            }
+            draw_radar();
+            A.draw();
+            A.move();            
         }
 
         requestAnimationFrame(mainLoop);
